@@ -20,8 +20,6 @@
 </div>
 <div class="main">
   <div id="codediv">
-    <textarea id="code">
-    </textarea>
   </div>
   <button>Save</button>
 </div>

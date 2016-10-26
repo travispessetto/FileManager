@@ -18,6 +18,11 @@ html,body
   box-sizing: border-box;
 }
 
+div.CodeMirror *, div.CodeMirror-gutters *
+{
+  padding: 0px;
+}
+
 h1
 {
   font-size: 32pt;
@@ -123,12 +128,17 @@ div.main
 
 textarea
 {
-  width: 100%;
-  height: 100%;
+    display: none;
 }
 
 div#codediv
 {
   width: 100%;
   height: 600px;
+}
+
+div.main, div.main *
+{
+  padding: 0px;
+  margin: 0px;
 }
