@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteRule ^(images|js|css|codemirror|lib)($|/) - [L]
+RewriteCond %{REQUEST_URI} !^/index.php
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
