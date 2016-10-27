@@ -21,5 +21,5 @@
 <div class="main">
   <div id="codediv">
   </div>
-  <button>Save</button>
+  <button data-action="savefile"><i class="fa fa-save"></i>&nbsp;Save</button>
 </div>

@@ -1,8 +1,14 @@
-
+var codeMirror;
 $(document).ready(function()
 {
   $(document).on("click","[data-dir]",expandDir);
   $(document).on("click","[data-file]",openFile);
+  $(document).on("click","[data-action]",performAction);
+  setWindow();
+});
+
+$(window).resize(function()
+{
   setWindow();
 });
 
@@ -16,17 +22,17 @@ var expandDir = function()
      var workingDiv = $(this);
      $.get("file/expand","filepath="+path,function(data,status,xhr)
      {
-        workingDiv.closest("div").append(data);
+        var appendingDiv = $(data);
+        workingDiv.closest("div").append(appendingDiv);
+        appendingDiv.slideDown('slow');
      });
    }
    else
    {
         $(this).removeClass("opened");
         $(this).addClass("closed");
-        $(this).closest("div.file").children("div").each(function()
-        {
-          $(this).remove();
-        });
+        toClose = $(this).next('div.file');
+        toClose.slideUp('slow',function(){toClose.remove()});
    }
 }
 
@@ -35,23 +41,24 @@ var openFile = function()
   var file = $(this).attr('data-file');
   $.get("file/openFile","file="+file,function(data,status,xhr)
   {
-    $("#codediv").html("");
-    $("textarea#code").val(data);
-    $("textarea#code").attr("data-open_file",file);
-    var codeMirror = CodeMirror(document.getElementById("codediv"),
+    if(data.handler == "codemirror")
     {
-      lineNumbers: true,
-      matchBrackets: true,
-      mode: "application/x-httpd-php",
-      indentUnit: 4,
-      indentWithTabs: true,
-      readOnly: false
-    });
-    codeMirror.setValue(data);
-    var height = parseInt($("#codediv").height());
-    console.log("code div " + height);
-    codeMirror.setSize("100%","100%");
-    codeMirror.refresh();
+          $("#codediv").html("");
+          $("body").attr("data-open_file",file);
+          codeMirror = CodeMirror(document.getElementById("codediv"),
+          {
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: data['mode'],
+            indentUnit: 4,
+            indentWithTabs: true,
+            readOnly: false,
+            inputStyle: "contenteditable"
+          });
+          codeMirror.setValue(data.filecontents);
+          var height = parseInt($("#codediv").height());
+          codeMirror.setSize("100%","100%");
+      }
   });
 }
 
@@ -61,9 +68,35 @@ var setWindow = function()
   var sidebarWidth = parseInt($(".side-bar").width());
   var width = winWidth - sidebarWidth;
   var height = $(window).height();
-  console.log(height);
   $(".main").height(height);
   $("#codediv").height(height - 50);
   $(".main").width(width);
-  console.log(width);
+}
+
+var performAction = function()
+{
+  var action = $(this).attr('data-action');
+  if(action == "savefile")
+  {
+    var file = $("body").attr("data-open_file");
+    var content = codeMirror.getValue();
+    $.post('file/save','file='+encodeURIComponent(file)+"&content="+encodeURIComponent(content),function(data,xhr,status)
+    {
+      console.log(data);
+      notice('<i class="fa fa-save"></i>&nbsp;File saved!');
+    });
+  }
+}
+
+var notice = function(message)
+{
+    $("#notice").html(message);
+    $("#notice").fadeIn();
+    // close after 3 secons
+    setTimeout(closeNotice,3000);
+}
+
+var closeNotice = function()
+{
+    $("#notice").fadeOut();
 }

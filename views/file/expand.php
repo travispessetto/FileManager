@@ -1,4 +1,4 @@
-<div class="file">
+<div class="file" style="display: none;">
   <?php foreach($data['files'] as $file): ?>
     <?php $datalink = is_dir("$data[fileroot]/$file")? "data-dir=\"$data[fileroot]/$file\"" : "data-file=\"$data[fileroot]/$file\""; ?>
     <div>

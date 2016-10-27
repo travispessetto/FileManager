@@ -126,19 +126,30 @@ div.main
   height: 80%;
 }
 
-textarea
-{
-    display: none;
-}
 
 div#codediv
 {
   width: 100%;
   height: 600px;
+  z-index: 0;
 }
 
 div.main, div.main *
 {
   padding: 0px;
   margin: 0px;
+}
+
+div#notice
+{
+  position: absolute;
+  background: #99e699 !important;
+  top: 0;
+  right: 0;
+  width: 400px;
+  padding: 10px;
+  font-size: 10pt;
+  color: #777;
+  display: none;
+  z-index: 999;
 }

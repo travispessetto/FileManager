@@ -25,15 +25,37 @@ class File extends Application
     {
       global $config;
       $file = $params['file'];
-      if(is_file($file))
+      $info = new SplFileInfo($file);
+      if($info->isFile())
       {
-        echo file_get_contents($file);
+        $data["extension"] = $info->getExtension();
+        if(array_key_exists($data['extension'],$config['extensionmodes']))
+        {
+          $data['mode'] = $config["extensionmodes"][$data['extension']];
+          $data['handler'] = "codemirror";
+          $data["filecontents"] = file_get_contents($file);
+          header('Content-Type: application/json');
+        }
+        else
+        {
+          $data['file'] = $file;
+          $data['handler'] = "download";
+        }
+          echo json_encode($data);
       }
       else
       {
         echo "File ($file) could not be opened as it is not recognized as a file by system";
       }
     }
-}
 
- ?>
+    public function Save($params)
+    {
+      if($_SERVER['REQUEST_METHOD'] == "POST")
+      {
+         $file = urldecode($_POST['file']);
+         $content = urldecode($_POST['content']);
+         file_put_contents($file,$content);
+      }
+    }
+}

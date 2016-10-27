@@ -20,6 +20,9 @@
     <script src="js/site.js"></script>
   </head>
   <body>
+    <div id="notice">
+      {{notice}}
+    </div>
     <?php $this->load_view_from_layout($view,$data); ?>
   </body>
 </html>
