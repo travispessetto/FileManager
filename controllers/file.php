@@ -26,6 +26,7 @@ class File extends Application
       global $config;
       $file = $params['file'];
       $info = new SplFileInfo($file);
+      $mime = mime_content_type($file);
       if($info->isFile())
       {
         $data["extension"] = $info->getExtension();
@@ -36,10 +37,18 @@ class File extends Application
           $data["filecontents"] = file_get_contents($file);
           header('Content-Type: application/json');
         }
+        elseif(stripos($mime,"text") !== false )
+        {
+          $data['mode'] = "text/plain";
+          $data['handler'] = "codemirror";
+          $data["filecontents"] = file_get_contents($file);
+          header('Content-Type: application/json');
+        }
         else
         {
           $data['file'] = $file;
           $data['handler'] = "download";
+          $data['mime'] = $mime;
         }
           echo json_encode($data);
       }
