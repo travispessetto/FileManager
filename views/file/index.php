@@ -23,3 +23,10 @@
   </div>
   <button data-action="savefile"><i class="fa fa-save"></i>&nbsp;Save</button>
 </div>
+<div id="dir-contextmenu">
+  <ul>
+    <li data-action="createdir"><i class="fa fa-plus"></i>&nbsp;<i class="fa fa-folder"></i>&nbsp;New Directory</li>
+    <li><i class="fa fa-plus"></i>&nbsp;<i class="fa fa-file-o"></i>&nbsp;New File</li>
+    <li data-action="deletedir"><i class="fa fa-trash"></i>&nbsp;<i class="fa fa-folder"></i>&nbsp;Delete Directory</li>
+  </ul>
+</div>

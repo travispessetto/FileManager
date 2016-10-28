@@ -23,6 +23,9 @@
     <div id="notice">
       {{notice}}
     </div>
+    <div id="alert">
+      {{alert}}
+    </div>
     <?php $this->load_view_from_layout($view,$data); ?>
   </body>
 </html>

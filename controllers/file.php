@@ -9,6 +9,33 @@ class File extends Application
       $this->View("file/index",array("title"=>"File Manager","fileroot"=>$config["fileroot"],"files"=>array_diff(scandir($config["fileroot"]),$config['dotfiles'])));
     }
 
+    public function DeleteDir($params)
+    {
+      try
+      {
+          $dir = urldecode($_POST["dir"]);
+          $iterator = new RecursiveDirectoryIterator($dir,RecursiveDirectoryIterator::SKIP_DOTS);
+          $files = new RecursiveIteratorIterator($iterator,RecursiveIteratorIterator::CHILD_FIRST);
+          foreach($files as $file)
+          {
+            if($file->isDir())
+            {
+              @rmdir($file->getRealPath());
+            }
+            else
+            {
+              @unlink($file->getRealPath());
+            }
+          }
+          @rmdir($dir);
+        }
+        catch(Exception $ex)
+        {
+          header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
+          echo json_encode(array("message" => "Directory ".$dir." could not be deleted"));
+        }
+    }
+
     public function Expand($params)
     {
        global $config;
@@ -19,6 +46,30 @@ class File extends Application
            $data["fileroot"] = $params['filepath'];
            $this->No_Layout_View("file/expand",$data);
        }
+    }
+
+    public function NewDir($params)
+    {
+      $name = $_POST['name'];
+      $dir = $_POST['dir'];
+      $newdir = join("/",array(trim($dir,"\t\n\r\0\x0B\\/"),trim($name,"\t\n\r\0\x0B\\/")));
+      try
+      {
+        if(@mkdir($newdir))
+        {
+          header('status-code: 200');
+          echo  json_encode(array("directory"=>$dir.$name));
+        }
+        else
+        {
+          header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
+          echo json_encode(array("message" => "File ".$dir.$name." could not be created"));
+        }
+      }
+      catch(Exception $ex)
+      {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+      }
     }
 
     public function OpenFile($params)

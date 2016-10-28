@@ -153,3 +153,50 @@ div#notice
   display: none;
   z-index: 999;
 }
+
+div#alert
+{
+  position: absolute;
+  background: #FF8686 !important;
+  top: 0;
+  right: 0;
+  width: 400px;
+  padding: 10px;
+  font-size: 10pt;
+  color: #777;
+  display: none;
+  z-index: 999;
+}
+
+div#dir-contextmenu
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  background: white;
+  padding: 0px;
+  margin: 0px;
+  border: 2px solid black;
+  display: none;
+}
+
+div#dir-contextmenu ul
+{
+  padding: 0px;
+  margin: 0px;
+  list-style-type: none;
+}
+
+
+div#dir-contextmenu li
+{
+  border-bottom: 1px solid #eee;
+  padding: 5px;
+}
+
+div#dir-contextmenu li:hover
+{
+  background: #A2E9C5;
+  cursor: pointer;
+}

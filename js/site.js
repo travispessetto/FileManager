@@ -4,6 +4,9 @@ $(document).ready(function()
   $(document).on("click","[data-dir]",expandDir);
   $(document).on("click","[data-file]",openFile);
   $(document).on("click","[data-action]",performAction);
+  $(document).ajaxError(alertAjaxError);
+  $(document).mouseup(hideDirMenu);
+  $("[data-dir]").contextmenu(showDirMenu);
   setWindow();
 });
 
@@ -25,6 +28,7 @@ var expandDir = function()
         var appendingDiv = $(data);
         workingDiv.closest("div").append(appendingDiv);
         appendingDiv.slideDown('slow');
+        $("[data-dir]").contextmenu(showDirMenu);
      });
    }
    else
@@ -73,7 +77,7 @@ var setWindow = function()
   $(".main").width(width);
 }
 
-var performAction = function()
+var performAction = function(event)
 {
   var action = $(this).attr('data-action');
   if(action == "savefile")
@@ -85,6 +89,60 @@ var performAction = function()
       console.log(data);
       notice('<i class="fa fa-save"></i>&nbsp;File saved!');
     });
+  }
+  else if(action == "createdir")
+  {
+    $("#dir-contextmenu").slideUp('slow');
+    var name = prompt("What should we call the new directory?","New Directory");
+    var dir = $("body").attr("data-current_dir");
+    $.post('file/newdir','name='+encodeURIComponent(name)+"&dir="+encodeURIComponent(dir), function(data,xhr,status)
+    {
+      notice('<i class="fa fa-folder-o"></i>&nbsp;Directory Created<br />'+
+      'You may need to reexpand the file to refesh');
+    });
+  }
+  else if(action == "deletedir")
+  {
+    var dir = $("body").attr("data-current_dir");
+    $.post('file/deleteDir',"dir="+encodeURIComponent(dir),function(data,xhr,status)
+    {
+      notice('<i class="fa fa-trash"></i>&nbsp;Directory Deleted<br>You may need to reexpand to see changes.');
+    });
+  }
+}
+
+var showDirMenu = function(event)
+{
+  event.preventDefault();
+  var x = $(this).offset().left;
+  var y = $(this).offset().top;
+  var height = $(this).height();
+  $("body").attr("data-current_dir",$(this).attr("data-dir"));
+  y = y + height;
+  var contextmenu = $("#dir-contextmenu");
+  if(contextmenu.css("display") == "block")
+  {
+      contextmenu.slideUp('slow',function(){slideDownDirMenu(contextmenu,x,y);});
+  }
+  else
+   {
+    slideDownDirMenu(contextmenu,x,y);
+  }
+}
+
+var slideDownDirMenu = function(contextmenu,x,y)
+{
+  contextmenu.css("left",x);
+  contextmenu.css("top",y);
+  contextmenu.slideDown();
+}
+
+var hideDirMenu = function(event)
+{
+  var container = $("#dir-contextmenu");
+  if(!container.is(event.target) && container.has(event.target).length === 0)
+  {
+    container.slideUp();
   }
 }
 
@@ -99,4 +157,23 @@ var notice = function(message)
 var closeNotice = function()
 {
     $("#notice").fadeOut();
+}
+
+var showAlert = function(message)
+{
+    $("#alert").html(message);
+    $("#alert").fadeIn();
+    // close after 3 secons
+    setTimeout(closeAlert,3000);
+}
+
+var closeAlert = function()
+{
+    $("#alert").fadeOut();
+}
+
+var alertAjaxError = function(e,xhr,settings)
+{
+    var json = JSON.parse(xhr.responseText);
+    showAlert('<i class="fa fa-exclamation-triangle"></i>&nbsp'+json.message);
 }
