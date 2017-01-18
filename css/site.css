@@ -156,7 +156,7 @@ div#notice
 
 div#alert
 {
-  position: absolute;
+  position: fixed;
   background: #FF8686 !important;
   top: 0;
   right: 0;
@@ -168,7 +168,7 @@ div#alert
   z-index: 999;
 }
 
-div#dir-contextmenu
+div#dir-contextmenu, div#file-contextmenu
 {
   position: absolute;
   top: 0;
@@ -181,7 +181,7 @@ div#dir-contextmenu
   display: none;
 }
 
-div#dir-contextmenu ul
+div#dir-contextmenu ul, div#file-contextmenu ul
 {
   padding: 0px;
   margin: 0px;
@@ -189,14 +189,83 @@ div#dir-contextmenu ul
 }
 
 
-div#dir-contextmenu li
+div#dir-contextmenu li, div#file-contextmenu li
 {
   border-bottom: 1px solid #eee;
   padding: 5px;
 }
 
-div#dir-contextmenu li:hover
+div#dir-contextmenu li:hover, div#dir-contextmenu li:hover
 {
   background: #A2E9C5;
   cursor: pointer;
+}
+
+.padded
+{
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+div#prompt
+{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -150px;
+	margin-left: -300px;
+	background: white;
+	height: 300px;
+	width: 600px;
+	border: 2px solid black;
+	display: none;
+	z-index: 2;
+}
+
+div#prompt > div#prompt-title
+{
+	padding: 5px 10px;
+	font-size: 20pt;
+	background: transparent;
+	border-bottom: 1px solid #eee;
+}
+
+div#prompt > div#prompt-text
+{
+	padding: 5px;
+	background: transparent;
+	height: 190px;
+}
+
+div#prompt > div#prompt-buttons
+{
+	text-align: right;
+	background: transparent;
+	padding: 0px 5px;
+}
+
+.btn-success
+{
+	background: #60F802;
+	color: white;
+	padding: 10px;
+}
+
+.btn-danger
+{
+	background: #F80260;
+	padding: 10px;
+	color: white;
+}
+
+div#modal-background
+{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.7);
+	display: none;
+	z-index: 1;
 }

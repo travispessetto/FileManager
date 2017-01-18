@@ -27,5 +27,26 @@
       {{alert}}
     </div>
     <?php $this->load_view_from_layout($view,$data); ?>
+	<!-- Prompt Dialog -->
+	<div id="prompt">
+		<div id="prompt-title">
+			Prompt
+		</div>
+		<div id="prompt-text">
+			<span id="prompt-message">What is your name?</span>
+			<br />
+			<br />
+			<input id="prompt-input" />
+		</div>
+		<div id="prompt-buttons">
+			<button id="prompt-cancel" class="btn-danger">Cancel</button>
+			<button id="prompt-ok" class="btn-success">OK</button>
+		</div>
+	</div>
+	<!-- Prompt Dialog -->
+	<!-- Modal Background -->
+	<div id="modal-background">
+	</div>
+	<!-- Modal Background -->
   </body>
 </html>

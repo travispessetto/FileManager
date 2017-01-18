@@ -71,6 +71,30 @@ class File extends Application
         header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
       }
     }
+	
+	public function NewFile($params)
+	{
+	 $name = $_POST['name'];
+      $dir = $_POST['dir'];
+      $newFile = join("/",array(trim($dir,"\t\n\r\0\x0B\\/"),trim($name,"\t\n\r\0\x0B\\/")));
+      try
+      {
+        if(file_put_contents($newFile,"") !== false)
+        {
+          header('status-code: 200');
+          echo  json_encode(array("file"=>$dir.$name));
+        }
+        else
+        {
+          header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
+          echo json_encode(array("message" => "File ".$dir.$name." could not be created"));
+        }
+      }
+      catch(Exception $ex)
+      {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+      }
+	}
 
     public function OpenFile($params)
     {

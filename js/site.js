@@ -7,6 +7,9 @@ $(document).ready(function()
   $(document).ajaxError(alertAjaxError);
   $(document).mouseup(hideDirMenu);
   $("[data-dir]").contextmenu(showDirMenu);
+  $("[data-file]").contextmenu(showFileMenu);
+  
+  $("#filter").keyup(filterFolders);
   setWindow();
 });
 
@@ -93,13 +96,7 @@ var performAction = function(event)
   else if(action == "createdir")
   {
     $("#dir-contextmenu").slideUp('slow');
-    var name = prompt("What should we call the new directory?","New Directory");
-    var dir = $("body").attr("data-current_dir");
-    $.post('file/newdir','name='+encodeURIComponent(name)+"&dir="+encodeURIComponent(dir), function(data,xhr,status)
-    {
-      notice('<i class="fa fa-folder-o"></i>&nbsp;Directory Created<br />'+
-      'You may need to reexpand the file to refesh');
-    });
+	showPrompt('What should we call the new directory?',createDirectoryOK,createDirectoryCancel);
   }
   else if(action == "deletedir")
   {
@@ -108,6 +105,11 @@ var performAction = function(event)
     {
       notice('<i class="fa fa-trash"></i>&nbsp;Directory Deleted<br>You may need to reexpand to see changes.');
     });
+  }
+  else if(action == "createfile")
+  {
+	  $("#dir-contentmenu").slideUp('slow');
+	  showPrompt('What should we call the new file?',createFileOK,createFileCancel);
   }
 }
 
@@ -120,7 +122,7 @@ var showDirMenu = function(event)
   $("body").attr("data-current_dir",$(this).attr("data-dir"));
   y = y + height;
   var contextmenu = $("#dir-contextmenu");
-  if(contextmenu.css("display") == "block")
+  if(contextmenu.css("display") != "none")
   {
       contextmenu.slideUp('slow',function(){slideDownDirMenu(contextmenu,x,y);});
   }
@@ -143,6 +145,7 @@ var hideDirMenu = function(event)
   if(!container.is(event.target) && container.has(event.target).length === 0)
   {
     container.slideUp();
+    container.css("display","none");
   }
 }
 
@@ -176,4 +179,140 @@ var alertAjaxError = function(e,xhr,settings)
 {
     var json = JSON.parse(xhr.responseText);
     showAlert('<i class="fa fa-exclamation-triangle"></i>&nbsp'+json.message);
+}
+
+var showFileMenu = function(event)
+{
+  event.preventDefault();
+  var x = $(this).offset().left;
+  var y = $(this).offset().top;
+  var height = $(this).height();
+  $("body").attr("data-current_dir",$(this).attr("data-dir"));
+  y = y + height;
+  var contextmenu = $("#dir-contextmenu");
+  if(contextmenu.css("display") != "none")
+  {
+      contextmenu.slideUp('slow',function(){slideDownDirMenu(contextmenu,x,y);});
+  }
+  else
+   {
+    slideDownDirMenu(contextmenu,x,y);
+  }
+}
+
+var slideDownDirMenu = function(contextmenu,x,y)
+{
+  contextmenu.css("left",x);
+  contextmenu.css("top",y);
+  contextmenu.slideDown();
+}
+
+var hideDirMenu = function(event)
+{
+  var container = $("#dir-contextmenu");
+  if(!container.is(event.target) && container.has(event.target).length === 0)
+  {
+    container.slideUp();
+    container.css("display","none");
+  }
+}
+
+var filterFolders = function()
+{
+	var value = $(this).val();
+	$(".file").each(function()
+	{
+		var file = $(this).text();
+		if(file.includes(value))
+		{
+			$(this).show();
+		}
+		else
+		{
+			$(this).hide();
+		}
+	});
+}
+
+var createDirectoryOK = function(name)
+{
+	if(!!name)
+    {
+      showAlert('<i class="fa fa-folder-o"></i>&nbsp;Directory name not set canceled');
+    }
+	else
+	{
+		var dir = $("body").attr("data-current_dir");
+		$.post('file/newdir','name='+encodeURIComponent(name)+"&dir="+encodeURIComponent(dir), function(data,xhr,status)
+		{
+		  notice('<i class="fa fa-folder-o"></i>&nbsp;Directory Created<br />'+
+		  'You may need to reexpand the file to refesh');
+		});
+	}
+}
+
+var createDirectoryCancel = function()
+{
+	showAlert('<i class="fa fa-folder-o"></i>&nbsp;Directory creation canceled');
+}
+
+var createFileOK = function(name)
+{
+	if(name == "" || name == null)
+    {
+	  console.log("NAME HAS VALUE OF: " + name);
+      showAlert('<i class="fa fa-folder-o"></i>&nbsp;File name not set canceled');
+    }
+	else
+	{
+		var dir = $("body").attr("data-current_dir");
+		$.post('file/newfile','name='+encodeURIComponent(name)+"&dir="+encodeURIComponent(dir), function(data,xhr,status)
+		{
+		  notice('<i class="fa fa-folder-o"></i>&nbsp;File Created<br />'+
+		  'You may need to reexpand the file to refesh');
+		});
+	}
+}
+
+var createFileCancel = function()
+{
+	showAlert('<i class="fa fa-folder-o"></i>&nbsp;File creation canceled');
+}
+
+var showPrompt = function(msg, success, cancel)
+{
+	$("#prompt-input").val("");
+	$('#prompt-message').text(msg);
+	$("div#modal-background").fadeIn();
+	$('div#prompt').fadeIn();
+	$('button#prompt-ok').unbind('click');
+	$("button#prompt-ok").click(function(){promptSuccess(success); });
+	$('button#prompt-cancel').unbind('click');
+	$("button#prompt-cancel").click(function(){promptCancel(cancel);});
+}
+
+var promptSuccess = function(success)
+{
+	closePrompt();
+	var input = $("#prompt-input").val();
+	success(input);
+}
+
+var promptCancel = function(cancel)
+{
+	closePrompt();
+	cancel();
+}
+
+var closePrompt = function()
+{
+	$("div#modal-background").fadeOut();
+	$("div#prompt").fadeOut();
+	$("div#prompt").fadeOut();
+}
+
+var funcNotSet = function()
+{
+	closePrompt();
+	showAlert("Fatal: A function was not set for this button.");
 }
