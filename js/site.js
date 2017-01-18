@@ -3,15 +3,21 @@ $(document).ready(function()
 {
   $(document).on("click","[data-dir]",expandDir);
   $(document).on("click","[data-file]",openFile);
-  $(document).on("click","[data-action]",performAction);
+  $(document).on("click","[data-action]",performActionByAttr);
   $(document).ajaxError(alertAjaxError);
   $(document).mouseup(hideDirMenu);
   $("[data-dir]").contextmenu(showDirMenu);
   $("[data-file]").contextmenu(showFileMenu);
-  
+  $(document).keydown(windowKeyPress);
   $("#filter").keyup(filterFolders);
   setWindow();
-});
+  document.addEventListener("keydown", function(e) {
+	  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+		    e.preventDefault();
+			performAction("savefile");
+		  }
+	  }, false);
+  });
 
 $(window).resize(function()
 {
@@ -80,13 +86,28 @@ var setWindow = function()
   $(".main").width(width);
 }
 
-var performAction = function(event)
+var windowKeyPress = function(event)
 {
-  var action = $(this).attr('data-action');
+	 if (event.which == 115 && (event.ctrlKey||event.metaKey)|| (event.which == 19)) {
+        event.preventDefault();
+        // do stuff
+        return false;
+    }
+    return true;
+}
+var performActionByAttr =  function(event)
+{
+	  var action = $(this).attr('data-action');
+	  performAction(action);
+}
+
+var performAction = function(action)
+{
   if(action == "savefile")
   {
     var file = $("body").attr("data-open_file");
     var content = codeMirror.getValue();
+	console.log('save file: ' + file);
     $.post('file/save','file='+encodeURIComponent(file)+"&content="+encodeURIComponent(content),function(data,xhr,status)
     {
       console.log(data);
@@ -177,6 +198,11 @@ var closeAlert = function()
 
 var alertAjaxError = function(e,xhr,settings)
 {
+	if(xhr === undefined || xhr.responseText === undefined)
+	{
+		console.log(xhr);
+		showAlert('<i class="fa fa-exclamation-triangle"></i>&nbsp;Undefined Error');
+	}
     var json = JSON.parse(xhr.responseText);
     showAlert('<i class="fa fa-exclamation-triangle"></i>&nbsp'+json.message);
 }
