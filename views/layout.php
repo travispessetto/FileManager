@@ -4,10 +4,14 @@
     <title><?php $this->display_value($data,"title"); ?></title>
     <!-- Contains Reset make sure is first -->
 
+	<link rel="stylesheet" href="codemirror/lib/codemirror.css" />
+	<link rel="stylesheet" href="codemirror/addon/scroll/simplescrollbars.css" />
     <script src="codemirror/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="codemirror/lib/codemirror.css" />
+	<link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css" />
     <link rel="stylesheet" href="css/site.css" />
     <!-- We will change this base on extension -->
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="codemirror/lib/codemirror.js"></script>
     <script src="codemirror/addon/edit/matchbrackets.js"></script>
     <script src="codemirror/mode/htmlmixed/htmlmixed.js"></script>
@@ -16,7 +20,7 @@
     <script src="codemirror/mode/css/css.js"></script>
     <script src="codemirror/mode/clike/clike.js"></script>
     <script src="codemirror/mode/php/php.js"></script>
-    <script src="js/jquery.js"></script>
+    <script src="codemirror/addon/scroll/simplescrollbars.js"></script>
     <script src="js/site.js"></script>
   </head>
   <body>

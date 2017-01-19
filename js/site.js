@@ -1,6 +1,7 @@
 var codeMirror;
 $(document).ready(function()
 {
+  $('.side-bar').mCustomScrollbar();
   $(document).on("click","[data-dir]",expandDir);
   $(document).on("click","[data-file]",openFile);
   $(document).on("click","[data-action]",performActionByAttr);
@@ -66,11 +67,12 @@ var openFile = function()
             indentUnit: 4,
             indentWithTabs: true,
             readOnly: false,
-            inputStyle: "contenteditable"
+            inputStyle: "contenteditable",
+			viewportMargin: Infinity,
           });
           codeMirror.setValue(data.filecontents);
-          var height = parseInt($("#codediv").height());
-          codeMirror.setSize("100%","100%");
+		  codeMirror.setSize('100%','100%');
+		  codeMirror.setOption('scrollbarStyle','simple');
       }
   });
 }
@@ -262,7 +264,7 @@ var filterFolders = function()
 
 var createDirectoryOK = function(name)
 {
-	if(!!name)
+	if(name != null && name != "")
     {
       showAlert('<i class="fa fa-folder-o"></i>&nbsp;Directory name not set canceled');
     }

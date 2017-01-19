@@ -10,9 +10,9 @@ export default {
 // You can find some technical background for some of the code below
 // at http://marijnhaverbeke.nl/blog/#cm-internals .
 `,
-  entry: "codemirror/src/codemirror.js",
+  entry: "src/codemirror.js",
   format: "umd",
-  dest: "codemirror/lib/codemirror.js",
+  dest: "lib/codemirror.js",
   moduleName: "CodeMirror",
-  plugins: [ buble() ]
+  plugins: [ buble({namedFunctionExpressions: false}) ]
 };

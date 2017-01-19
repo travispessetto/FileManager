@@ -69,7 +69,7 @@
 <section class=first id=overview>
     <h2 style="position: relative">
       User manual and reference guide
-      <span style="color: #888; font-size: 1rem; position: absolute; right: 0; bottom: 0">version 5.20.2</span>
+      <span style="color: #888; font-size: 1rem; position: absolute; right: 0; bottom: 0">version 5.22.0</span>
     </h2>
 
     <p>CodeMirror is a code-editor component that can be embedded in
@@ -638,6 +638,9 @@
       <dd>Fires when the editor is <a href="#refresh">refreshed</a>
       or <a href="#setSize">resized</a>. Mostly useful to invalidate
       cached values that depend on the editor or character size.</dd>
+
+      <dt id="event_optionChange"><code><strong>"optionChange"</strong> (instance: CodeMirror, option: string)</code></dt>
+      <dd>Dispatched every time an option is changed with <a href="#setOption"><code>setOption</code></a>.</dd>
 
       <dt id="event_scrollCursorIntoView"><code><strong>"scrollCursorIntoView"</strong> (instance: CodeMirror, event: Event)</code></dt>
       <dd>Fires when the editor tries to scroll its cursor into view.
@@ -1699,7 +1702,7 @@ editor.setOption("extraKeys", {
     <h3 id="api_decoration">Widget, gutter, and decoration methods</h3>
 
     <dl>
-      <dt id="setGutterMarker"><code><strong>cm.setGutterMarker</strong>(line: integer|LineHandle, gutterID: string, value: Element) → LineHandle</code></dt>
+      <dt id="setGutterMarker"><code><strong>doc.setGutterMarker</strong>(line: integer|LineHandle, gutterID: string, value: Element) → LineHandle</code></dt>
       <dd>Sets the gutter marker for the given gutter (identified by
       its CSS class, see
       the <a href="#option_gutters"><code>gutters</code></a> option)
@@ -1708,7 +1711,7 @@ editor.setOption("extraKeys", {
       will be shown in the specified gutter next to the specified
       line.</dd>
 
-      <dt id="clearGutter"><code><strong>cm.clearGutter</strong>(gutterID: string)</code></dt>
+      <dt id="clearGutter"><code><strong>doc.clearGutter</strong>(gutterID: string)</code></dt>
       <dd>Remove all gutter markers in
       the <a href="#option_gutters">gutter</a> with the given ID.</dd>
 
@@ -1733,7 +1736,7 @@ editor.setOption("extraKeys", {
       can be left off to remove all classes for the specified node, or
       be a string to remove only a specific class.</dd>
 
-      <dt id="lineInfo"><code><strong>cm.lineInfo</strong>(line: integer|LineHandle) → object</code></dt>
+      <dt id="lineInfo"><code><strong>doc.lineInfo</strong>(line: integer|LineHandle) → object</code></dt>
       <dd>Returns the line number, text content, and marker status of
       the given line, which can be either a number or a line handle.
       The returned object has the structure <code>{line, handle, text,
@@ -1863,13 +1866,16 @@ editor.setOption("extraKeys", {
       height. <code>mode</code> can be one of the same strings
       that <a href="#coordsChar"><code>coordsChar</code></a>
       accepts.</dd>
-      <dt id="heightAtLine"><code><strong>cm.heightAtLine</strong>(line: integer|LineHandle, ?mode: string) → number</code></dt>
+      <dt id="heightAtLine"><code><strong>cm.heightAtLine</strong>(line: integer|LineHandle, ?mode: string, ?includeWidgets: bool) → number</code></dt>
       <dd>Computes the height of the top of a line, in the coordinate
       system specified by <code>mode</code>
       (see <a href="#coordsChar"><code>coordsChar</code></a>), which
       defaults to <code>"page"</code>. When a line below the bottom of
       the document is specified, the returned value is the bottom of
-      the last line in the document.</dd>
+      the last line in the document. By default, the position of the
+      actual text is returned. If `includeWidgets` is true and the
+      line has line widgets, the position above the first line widget
+      is returned.</dd>
       <dt id="defaultTextHeight"><code><strong>cm.defaultTextHeight</strong>() → number</code></dt>
       <dd>Returns the line height of the default font for the editor.</dd>
       <dt id="defaultCharWidth"><code><strong>cm.defaultCharWidth</strong>() → number</code></dt>
@@ -2757,12 +2763,20 @@ editor.setOption("extraKeys", {
       like in <a href="../demo/markselection.html">this demo</a>.</dd>
 
       <dt id="addon_active-line"><a href="../addon/selection/active-line.js"><code>selection/active-line.js</code></a></dt>
-      <dd>Defines a <code>styleActiveLine</code> option that, when enabled,
-      gives the wrapper of the active line the class <code>CodeMirror-activeline</code>,
-      adds a background with the class <code>CodeMirror-activeline-background</code>,
-      and adds the class <code>CodeMirror-activeline-gutter</code> to the
-      line's gutter space is enabled. See the
-      <a href="../demo/activeline.html">demo</a>.</dd>
+      <dd>Defines a <code>styleActiveLine</code> option that, when
+      enabled, gives the wrapper of the line that contains the cursor
+      the class <code>CodeMirror-activeline</code>, adds a background
+      with the class <code>CodeMirror-activeline-background</code>,
+      and adds the class <code>CodeMirror-activeline-gutter</code> to
+      the line's gutter space is enabled. The option's value may be a
+      boolean or an object specifying the following options:
+        <dl>
+          <dt><code><strong>nonEmpty</strong>: bool</code></dt>
+          <dd>Controls whether single-line selections, or just cursor
+          selections, are styled. Defaults to false (only cursor
+          selections).</dd>
+        </dl>
+      See the <a href="../demo/activeline.html">demo</a>.</dd>
 
       <dt id="addon_selection-pointer"><a href="../addon/selection/selection-pointer.js"><code>selection/selection-pointer.js</code></a></dt>
       <dd>Defines a <code>selectionPointer</code> option which you can

@@ -207,6 +207,30 @@
      "  [keyword private] [property _foo]: [variable-3 string];",
      "}")
 
+  TS("typescript_literal_types",
+     "[keyword import] [keyword *] [keyword as] [def Sequelize] [keyword from] [string 'sequelize'];",
+     "[keyword interface] [def MyAttributes] {",
+     "  [property truthy]: [string 'true'] [operator |] [number 1] [operator |] [atom true];",
+     "  [property falsy]: [string 'false'] [operator |] [number 0] [operator |] [atom false];",
+     "}",
+     "[keyword interface] [def MyInstance] [keyword extends] [variable-3 Sequelize].[variable-3 Instance] [operator <] [variable-3 MyAttributes] [operator >] {",
+     "  [property rawAttributes]: [variable-3 MyAttributes];",
+     "  [property truthy]: [string 'true'] [operator |] [number 1] [operator |] [atom true];",
+     "  [property falsy]: [string 'false'] [operator |] [number 0] [operator |] [atom false];",
+     "}")
+
+  TS("typescript_extend_operators",
+     "[keyword export] [keyword interface] [def UserModel] [keyword extends]",
+     "  [variable-3 Sequelize].[variable-3 Model] [operator <] [variable-3 UserInstance], [variable-3 UserAttributes] [operator >] {",
+     "    [property findById]: (",
+     "    [variable userId]: [variable-3 number]",
+     "    ) [operator =>] [variable-3 Promise] [operator <] [variable-3 Array] [operator <] { [property id], [property name] } [operator >>];",
+     "    [property updateById]: (",
+     "    [variable userId]: [variable-3 number],",
+     "    [variable isActive]: [variable-3 boolean]",
+     "    ) [operator =>] [variable-3 Promise] [operator <] [variable-3 AccountHolderNotificationPreferenceInstance] [operator >];",
+     "  }")
+
   var jsonld_mode = CodeMirror.getMode(
     {indentUnit: 2},
     {name: "javascript", jsonld: true}

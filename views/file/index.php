@@ -35,5 +35,7 @@
 <div class="main">
   <div id="codediv">
   </div>
-  <button data-action="savefile"><i class="fa fa-save"></i>&nbsp;Save</button>
+  <div id="filemenu">
+	<button data-action="savefile"><i class="fa fa-save"></i>&nbsp;Save</button>
+  </div>
 </div>
