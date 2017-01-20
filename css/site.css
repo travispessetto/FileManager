@@ -63,12 +63,26 @@ div.side-bar
   border: none;
   float: left;
   position: relative;
-  overflow: hidden;
+}
+
+div.side-bar-top
+{
+	border-bottom: 2px solid #000;
+}
+
+div.side-bar-bottom
+{
+	overflow: hidden;
 }
 
 div.file
 {
   padding: 0px 10px;
+}
+
+div.file:last-child
+{
+	margin-bottom: 50px;
 }
 
 span.file:hover
@@ -193,6 +207,7 @@ div#dir-contextmenu li, div#file-contextmenu li
 {
   border-bottom: 1px solid #eee;
   padding: 5px;
+  color: #333;
 }
 
 div#dir-contextmenu li:hover, div#dir-contextmenu li:hover

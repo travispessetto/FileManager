@@ -1,7 +1,7 @@
 var codeMirror;
 $(document).ready(function()
 {
-  $('.side-bar').mCustomScrollbar();
+  $('.side-bar-bottom').mCustomScrollbar();
   $(document).on("click","[data-dir]",expandDir);
   $(document).on("click","[data-file]",openFile);
   $(document).on("click","[data-action]",performActionByAttr);
@@ -86,6 +86,9 @@ var setWindow = function()
   $(".main").height(height);
   $("#codediv").height(height - 50);
   $(".main").width(width);
+  var sideBarTopHeight = $(".side-bar-top").height();
+  var sidebarBottomHeight = height - sideBarTopHeight - 100;
+  $(".side-bar-bottom").height(sidebarBottomHeight);
 }
 
 var windowKeyPress = function(event)
@@ -140,7 +143,7 @@ var showDirMenu = function(event)
 {
   event.preventDefault();
   var x = $(this).offset().left;
-  var y = $(this).offset().top;
+  var y = $(this).position().top;
   var height = $(this).height();
   $("body").attr("data-current_dir",$(this).attr("data-dir"));
   y = y + height;
@@ -264,7 +267,7 @@ var filterFolders = function()
 
 var createDirectoryOK = function(name)
 {
-	if(name != null && name != "")
+	if(name == null || name == "")
     {
       showAlert('<i class="fa fa-folder-o"></i>&nbsp;Directory name not set canceled');
     }
